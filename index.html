@@ -102,6 +102,7 @@
 </header>
 
 <div class="wrapper">
+  <!-- DATOS GENERALES -->
   <div class="card">
     <div class="card-header">📋 Datos Generales</div>
     <div class="card-body">
@@ -122,6 +123,7 @@
     <span><span class="dot" style="background:#c62828"></span> S (Fuera de Servicio)</span>
   </div>
 
+  <!-- SECCIONES -->
   <div class="card">
     <div class="card-header">🔧 Mecánica</div>
     <div class="card-body" style="padding:0">
@@ -175,6 +177,7 @@
     </div>
   </div>
 
+  <!-- BOTÓN AUTOMÁTICO -->
   <div class="btn-row">
     <button class="btn btn-wa" onclick="procesarYEnviarWhatsApp()">
       🚀 ENVIAR REPORTE POR WHATSAPP
@@ -190,37 +193,39 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzoQQQXMtNh6xD
 
 const SECCIONES = {
   mecanica: ["Lubricación","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyección","Sist. Dirección","Sist. Suspensión","Transmisión de potencia"],
-  soldadura: ['"S" Turbo',"Chasis/Puente","Escape","Flexible","Silenciadores/base/tensor","Sinchos","Tanques de combustible","Tornamesa"],
+  soldadura: ["S Turbo","Chasis/Puente","Escape","Flexible","Silenciadores/base/tensor","Sinchos","Tanques de combustible","Tornamesa"],
   electro: ["Alternador","Baterías","Cables","Chicote Eléctrico","Computadora","Fajas","Fusibles","Luces delanteras","Luces laterales","Luces pidevías","Luz Placa","Motor limpia brisas","Sportline","Starter","Stop"]
 };
 
 function buildTables() {
-  Object.keys(SECCIONES).forEach(sec => {
-    const tbody = document.getElementById(`tb-${sec}`);
+  Object.keys(SECCIONES).forEach(function(sec) {
+    var tbody = document.getElementById("tb-" + sec);
     if(!tbody) return;
-    SECCIONES[sec].forEach(item => {
-      const id = `${sec}_${item.replace(/[^a-zA-Z0-9]/g,'_')}`;
-      let tr = `<tr>
-        <td>${item}</td>
-        <td>
-          <div class="ors-group">
-            <input type="radio" name="${id}" id="${id}_ok" value="Ok">
-            <label for="${id}_ok" class="ors-btn">Ok</label>
-            <input type="radio" name="${id}" id="${id}_r" value="R">
-            <label for="${id}_r" class="ors-btn">R</label>
-            <input type="radio" name="${id}" id="${id}_s" value="S">
-            <label for="${id}_s" class="ors-btn">S</label>
-          </div>
-        </td>`;
-      if(sec === 'mecanica') tr += `<td><input type="text" id="${id}_obs" style="width:100%; padding:4px; border:1px solid #ccc; border-radius:4px;"></td>`;
-      tr += `</tr>`;
+    SECCIONES[sec].forEach(function(item) {
+      var id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g,"_");
+      var tr = "<tr>" +
+        "<td>" + item + "</td>" +
+        "<td>" +
+          "<div class='ors-group'>" +
+            "<input type='radio' name='" + id + "' id='" + id + "_ok' value='Ok' checked>" +
+            "<label for='" + id + "_ok' class='ors-btn'>Ok</label>" +
+            "<input type='radio' name='" + id + "' id='" + id + "_r' value='R'>" +
+            "<label for='" + id + "_r' class='ors-btn'>R</label>" +
+            "<input type='radio' name='" + id + "' id='" + id + "_s' value='S'>" +
+            "<label for='" + id + "_s' class='ors-btn'>S</label>" +
+          "</div>" +
+        "</td>";
+      if(sec === 'mecanica') {
+        tr += "<td><input type='text' id='" + id + "_obs' style='width:100%; padding:4px; border:1px solid #ccc; border-radius:4px;'></td>";
+      }
+      tr += "</tr>";
       tbody.innerHTML += tr;
     });
   });
 }
 
 function getData() {
-  const data = {
+  var data = {
     fecha: document.getElementById('fecha').value,
     operador: document.getElementById('operador').value,
     placa: document.getElementById('placa').value,
@@ -232,12 +237,12 @@ function getData() {
     nombreAuditor: document.getElementById('nombreAuditor').value,
     items: {}
   };
-  Object.keys(SECCIONES).forEach(sec => {
+  Object.keys(SECCIONES).forEach(function(sec) {
     data.items[sec] = {};
-    SECCIONES[sec].forEach(item => {
-      const id = `${sec}_${item.replace(/[^a-zA-Z0-9]/g,'_')}`;
-      const checked = document.querySelector(`input[name="${id}"]:checked`);
-      const obsEl = document.getElementById(`${id}_obs`);
+    SECCIONES[sec].forEach(function(item) {
+      var id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g,"_");
+      var checked = document.querySelector("input[name='" + id + "']:checked");
+      var obsEl = document.getElementById(id + "_obs");
       data.items[sec][item] = {
         estado: checked ? checked.value : 'Ok',
         obs: obsEl ? obsEl.value : ''
@@ -248,26 +253,30 @@ function getData() {
 }
 
 function initCanvas(id) {
-  const canvas = document.getElementById(id);
+  var canvas = document.getElementById(id);
   if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
+  var ctx = canvas.getContext('2d');
+  var drawing = false;
   canvas.width = canvas.offsetWidth; canvas.height = 90;
-  function pos(e) { const r = canvas.getBoundingClientRect(); const s = e.touches ? e.touches[0] : e; return { x: s.clientX - r.left, y: s.clientY - r.top }; }
-  canvas.addEventListener('pointerdown', e => { drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x,p.y); });
-  canvas.addEventListener('pointermove', e => { if(!drawing) return; const p = pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.stroke(); });
-  canvas.addEventListener('pointerup', () => drawing = false);
+  function pos(e) { 
+    var r = canvas.getBoundingClientRect(); 
+    var s = e.touches ? e.touches[0] : e; 
+    return { x: s.clientX - r.left, y: s.clientY - r.top }; 
+  }
+  canvas.addEventListener('pointerdown', function(e) { drawing = true; ctx.beginPath(); var p = pos(e); ctx.moveTo(p.x,p.y); });
+  canvas.addEventListener('pointermove', function(e) { if(!drawing) return; var p = pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.stroke(); });
+  canvas.addEventListener('pointerup', function() { drawing = false; });
 }
 
 function procesarYEnviarWhatsApp() {
-  const d = getData();
+  var d = getData();
   if (!d.fecha || !d.placa) {
     showToast("⚠️ Coloca la Fecha y Placa obligatoriamente");
     return;
   }
 
-  const loading = document.getElementById('loading');
-  const loadingTxt = document.getElementById('loading-txt');
+  var loading = document.getElementById('loading');
+  var loadingTxt = document.getElementById('loading-txt');
   loading.style.display = 'flex';
   loadingTxt.textContent = "Guardando en Google Sheets y creando PDF...";
 
@@ -275,5 +284,43 @@ function procesarYEnviarWhatsApp() {
     method: 'POST',
     body: JSON.stringify(d)
   })
-  .then(res => res.json())
-  .then(response =>
+  .then(function(res) { return res.json(); })
+  .then(function(response) {
+    loading.style.display = 'none';
+    if(response.status === 'ok' && response.pdfUrl) {
+      var txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
+      txt += "━━━━━━━━━━━━━━━━━━━━\n";
+      txt += "📅 *Fecha:* " + d.fecha + "\n";
+      txt += "🚘 *Placa:* " + d.placa + "\n";
+      txt += "👤 *Operador:* " + (d.operador || '—') + "\n";
+      txt += "🔑 *Código:* " + (d.codigoCabezal || '—') + "\n\n";
+      txt += "📄 *Ver Reporte Completo en PDF:* \n" + response.pdfUrl + "\n";
+      txt += "━━━━━━━━━━━━━━━━━━━━";
+
+      var urlWa = "https://wa.me/?text=" + encodeURIComponent(txt);
+      window.open(urlWa, '_blank');
+      showToast("✅ ¡Enviado con éxito!");
+    } else {
+      showToast("❌ Error al generar el enlace del PDF");
+    }
+  })
+  .catch(function(err) {
+    loading.style.display = 'none';
+    showToast("❌ Hubo un problema al conectar con el servidor");
+  });
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast'); t.textContent = msg; t.className = 'show';
+  setTimeout(function() { t.className = ''; }, 3500);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  buildTables(); 
+  initCanvas('firmaOperador'); 
+  initCanvas('firmaAuditor');
+  document.getElementById('fecha').valueAsDate = new Date();
+});
+</script>
+</body>
+</html>
