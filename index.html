@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inspección Inicial – Cabezal</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
   :root {
     --green:  #2e7d32;
@@ -16,23 +18,13 @@
     --red:    #c62828;
     --shadow: 0 2px 12px rgba(0,0,0,.10);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Barlow', sans-serif;
-    background: #f0f2f0;
-    color: var(--dark);
-    min-height: 100vh;
-  }
+  body { font-family: 'Barlow', sans-serif; background: #f0f2f0; color: var(--dark); min-height: 100vh; }
 
   header {
-    background: var(--green);
-    color: #fff;
+    background: var(--green); color: #fff;
     padding: 18px 20px 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    display: flex; align-items: center; gap: 14px;
     position: sticky; top: 0; z-index: 100;
     box-shadow: 0 3px 12px rgba(0,0,0,.25);
   }
@@ -41,30 +33,56 @@
     font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 22px;
     padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; flex-shrink: 0;
   }
-  header h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(18px, 4vw, 26px); line-height: 1.1; }
+  header h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(18px,4vw,26px); letter-spacing: .5px; line-height: 1.1; }
   header span { font-weight: 400; font-size: 13px; opacity: .85; display: block; }
 
   .wrapper { max-width: 780px; margin: 22px auto; padding: 0 14px 60px; }
 
   .card { background: #fff; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden; }
-  .card-header { background: var(--green); color: #fff; padding: 10px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+  .card-header {
+    background: var(--green); color: #fff; padding: 10px 16px;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px;
+    letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;
+  }
   .card-body { padding: 16px; }
 
   .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
   @media(max-width:480px){ .meta-grid { grid-template-columns: 1fr; } }
 
-  .field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px; }
-  .field input, .field textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 6px; padding: 9px 11px; font-family: 'Barlow', sans-serif; font-size: 14px; background: var(--gray); }
+  .field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: #555; margin-bottom: 4px; }
+  .field input, .field textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 9px 11px; font-family: 'Barlow', sans-serif; font-size: 14px;
+    color: var(--dark); background: var(--gray); transition: border .2s, background .2s;
+  }
   .field input:focus, .field textarea:focus { outline: none; border-color: var(--green2); background: #fff; }
+  .field textarea { resize: vertical; min-height: 70px; }
 
   .insp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .insp-table th { background: #e8f5e9; color: var(--green); font-weight: 700; font-size: 11px; padding: 7px 10px; border-bottom: 2px solid var(--green2); }
-  .insp-table td { padding: 7px 8px; border-bottom: 1px solid #eee; }
+  .insp-table th {
+    background: #e8f5e9; color: var(--green); font-weight: 700; font-size: 11px;
+    letter-spacing: .5px; text-transform: uppercase; padding: 7px 10px;
+    text-align: center; border-bottom: 2px solid var(--green2);
+  }
+  .insp-table th:first-child { text-align: left; }
+  .insp-table td { padding: 7px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+  .insp-table tr:last-child td { border-bottom: none; }
+  .insp-table tr:hover td { background: #f9fbe7; }
+  .insp-table td.desc { font-weight: 500; }
+  .insp-table td.obs input {
+    width: 100%; border: 1px solid #ddd; border-radius: 4px;
+    padding: 5px 7px; font-size: 13px; background: var(--gray);
+  }
+  .insp-table td.obs input:focus { outline: none; border-color: var(--green2); background: #fff; }
 
   .ors-group { display: flex; gap: 3px; justify-content: center; }
   .ors-group input[type=radio] { display: none; }
-  .ors-btn { min-width: 35px; height: 28px; border-radius: 5px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; color: #999; background: #fff; }
-  
+  .ors-btn {
+    min-width: 32px; height: 30px; border-radius: 5px; border: 1.5px solid #ccc;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+    background: #fff; color: #999; transition: all .15s; padding: 0 7px;
+  }
   .ors-group input[type=radio][value="Ok"]:checked + .ors-btn { background:#43a047; border-color:#43a047; color:#fff; }
   .ors-group input[type=radio][value="R"]:checked  + .ors-btn { background:#f9a825; border-color:#f9a825; color:#fff; }
   .ors-group input[type=radio][value="S"]:checked  + .ors-btn { background:#c62828; border-color:#c62828; color:#fff; }
@@ -72,23 +90,48 @@
   .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; padding: 6px 16px 10px; color: #666; }
   .legend span { display: flex; align-items: center; gap: 5px; }
   .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .dot-ok { background:#43a047; } .dot-r { background:#f9a825; } .dot-s { background:#c62828; }
 
   .two-col-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
   @media(max-width:580px){ .two-col-wrapper { grid-template-columns: 1fr; } }
+  .two-col-wrapper .card { margin-bottom: 0; }
 
   .firmas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media(max-width:480px){ .firmas-grid { grid-template-columns: 1fr; } }
-  .firma-box canvas { border: 1.5px solid var(--border); border-radius: 6px; background: var(--gray); width: 100%; height: 90px; touch-action: none; }
+  .firma-box { text-align: center; }
+  .firma-box label { font-size: 12px; font-weight: 600; color: #555; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+  .firma-box canvas { border: 1.5px solid var(--border); border-radius: 6px; background: var(--gray); width: 100%; height: 90px; cursor: crosshair; touch-action: none; }
+  .firma-clear { font-size: 11px; color: var(--red); cursor: pointer; background: none; border: none; margin-top: 3px; font-family: 'Barlow', sans-serif; font-weight: 600; }
 
-  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-  .btn { display: flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; text-transform: uppercase; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
-  .btn-wa { background: #25d366; color: #fff; width: 100%; max-width: 400px; justify-content: center; font-size: 18px; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+  .btn {
+    display: flex; align-items: center; gap: 8px; padding: 13px 28px;
+    border-radius: 8px; border: none; cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px;
+    letter-spacing: .5px; text-transform: uppercase;
+    transition: transform .15s, box-shadow .15s; box-shadow: 0 3px 10px rgba(0,0,0,.18);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.22); }
+  .btn:active { transform: translateY(0); }
+  .btn-send  { background: var(--green); color: #fff; }
+  .btn-wa    { background: #25d366; color: #fff; }
+  .btn-reset { background: #fff; color: var(--green); border: 2px solid var(--green); }
 
-  #loading { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 998; align-items: center; justify-content: center; flex-direction: column; gap: 14px; color: #fff; font-weight: 600; }
+  #toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--green); color: #fff; padding: 12px 26px; border-radius: 30px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700;
+    box-shadow: 0 4px 20px rgba(0,0,0,.25); transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    z-index: 999; pointer-events: none; white-space: nowrap;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.error { background: var(--red); }
+
+  #loading { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 998; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
+  #loading.show { display: flex; }
   .spinner { width: 46px; height: 46px; border: 5px solid rgba(255,255,255,.3); border-top-color: var(--yellow); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: #fff; padding: 12px 26px; border-radius: 30px; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; transition: transform .35s; z-index: 999; }
-  #toast.show { transform: translateX(-50%) translateY(0); }
+  #loading p { color: #fff; font-weight: 600; font-size: 15px; text-align:center; padding: 0 20px; }
 </style>
 </head>
 <body>
@@ -102,8 +145,10 @@
 </header>
 
 <div class="wrapper">
+
+  <!-- DATOS GENERALES -->
   <div class="card">
-    <div class="card-header">📋 Datos Generales</div>
+    <div class="card-header"><span>📋</span> Datos Generales</div>
     <div class="card-body">
       <div class="meta-grid">
         <div class="field"><label>Fecha</label><input type="date" id="fecha" required></div>
@@ -117,222 +162,414 @@
   </div>
 
   <div class="legend">
-    <span><span class="dot" style="background:#43a047"></span> Ok</span>
-    <span><span class="dot" style="background:#f9a825"></span> R (Revisión)</span>
-    <span><span class="dot" style="background:#c62828"></span> S (Fuera de Servicio)</span>
+    <span><span class="dot dot-ok"></span> Ok – Sin novedad</span>
+    <span><span class="dot dot-r"></span> R – Revisión</span>
+    <span><span class="dot dot-s"></span> S – Fuera de servicio</span>
   </div>
 
+  <!-- MECÁNICA -->
   <div class="card">
-    <div class="card-header">🔧 Mecánica</div>
+    <div class="card-header"><span>🔧</span> Mecánica</div>
     <div class="card-body" style="padding:0">
       <table class="insp-table">
-        <thead><tr><th>Descripción</th><th>Estado</th><th>Observaciones</th></tr></thead>
+        <thead><tr><th>Descripción</th><th>Estado</th><th style="min-width:130px">Observaciones</th></tr></thead>
         <tbody id="tb-mecanica"></tbody>
       </table>
     </div>
   </div>
 
+  <!-- SOLDADURA + ELECTRO -->
   <div class="two-col-wrapper">
     <div class="card">
-      <div class="card-header">🔩 Soldadura</div>
+      <div class="card-header"><span>🔩</span> Soldadura</div>
       <div class="card-body" style="padding:0">
-        <table class="insp-table">
-          <thead><tr><th>Descripción</th><th>Estado</th></tr></thead>
-          <tbody id="tb-soldadura"></tbody>
-        </table>
+        <table class="insp-table"><thead><tr><th>Descripción</th><th>Estado</th></tr></thead><tbody id="tb-soldadura"></tbody></table>
       </div>
     </div>
     <div class="card">
-      <div class="card-header">⚡ Electromecánica</div>
+      <div class="card-header"><span>⚡</span> Electromecánica</div>
       <div class="card-body" style="padding:0">
-        <table class="insp-table">
-          <thead><tr><th>Descripción</th><th>Estado</th></tr></thead>
-          <tbody id="tb-electro"></tbody>
-        </table>
+        <table class="insp-table"><thead><tr><th>Descripción</th><th>Estado</th></tr></thead><tbody id="tb-electro"></tbody></table>
       </div>
     </div>
   </div>
 
+  <!-- PINTURA + LLANTAS -->
+  <div class="two-col-wrapper">
+    <div class="card">
+      <div class="card-header"><span>🎨</span> Pintura</div>
+      <div class="card-body" style="padding:0">
+        <table class="insp-table"><thead><tr><th>Descripción</th><th>Estado</th></tr></thead><tbody id="tb-pintura"></tbody></table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>🛞</span> Llantas</div>
+      <div class="card-body" style="padding:0">
+        <table class="insp-table"><thead><tr><th>Descripción</th><th>Estado</th></tr></thead><tbody id="tb-llantas"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBSERVACIONES -->
   <div class="card">
-    <div class="card-header">📝 Observaciones y Firmas</div>
+    <div class="card-header"><span>📝</span> Observaciones</div>
     <div class="card-body">
       <div class="field" style="margin-bottom:12px">
-        <label>Observaciones</label>
-        <textarea id="obsOperador" placeholder="Novedades detectadas..."></textarea>
+        <label>Observaciones – Operador</label>
+        <textarea id="obsOperador" placeholder="Anote cualquier novedad observada..."></textarea>
       </div>
+      <div class="field">
+        <label>Observaciones – Personal de Mantenimiento</label>
+        <textarea id="obsMantenimiento" placeholder="Anote recomendaciones o acciones a tomar..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIRMAS -->
+  <div class="card">
+    <div class="card-header"><span>✍️</span> Firmas</div>
+    <div class="card-body">
       <div class="firmas-grid">
         <div class="firma-box">
           <label>Nombre Operador</label>
-          <input type="text" id="nombreOperador" placeholder="Nombre">
+          <input type="text" id="nombreOperador" placeholder="Nombre completo" style="width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:14px;margin-bottom:8px;background:var(--gray)">
+          <label>Firma Operador</label>
           <canvas id="firmaOperador"></canvas>
+          <button class="firma-clear" onclick="clearCanvas('firmaOperador')">✕ Limpiar</button>
         </div>
         <div class="firma-box">
-          <label>Nombre Auditor</label>
-          <input type="text" id="nombreAuditor" placeholder="Nombre">
+          <label>Nombre Auditor de Campo</label>
+          <input type="text" id="nombreAuditor" placeholder="Nombre completo" style="width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:14px;margin-bottom:8px;background:var(--gray)">
+          <label>Firma Auditor de Campo</label>
           <canvas id="firmaAuditor"></canvas>
+          <button class="firma-clear" onclick="clearCanvas('firmaAuditor')">✕ Limpiar</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- BOTONES -->
   <div class="btn-row">
-    <button class="btn btn-wa" onclick="procesarYEnviarWhatsApp()">
-      🚀 ENVIAR REPORTE POR WHATSAPP
+    <button class="btn btn-wa" onclick="enviarReporte()" style="width:100%;max-width:420px;justify-content:center;font-size:18px;padding:16px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      ENVIAR REPORTE POR WHATSAPP
+    </button>
+    <button class="btn btn-reset" onclick="resetForm()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      Nuevo
     </button>
   </div>
+
 </div>
 
-<div id="loading"><div class="spinner"></div><p id="loading-txt">Procesando inspección...</p></div>
+<div id="loading">
+  <div class="spinner"></div>
+  <p id="loadingMsg">Guardando y generando PDF en Google Drive…<br><small style="opacity:.75;font-size:12px">Esto puede tomar 15-30 segundos</small></p>
+</div>
 <div id="toast"></div>
 
 <script>
-// REEMPLAZA ESTA URL CON TU URL REAL DE GOOGLE SI NO COINCIDE EXACATAMENTE
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxA2N8mTstRl654EPBqSepTc3X6qRChC-YvA0z6FpP2b9WAtW2GgWvWzQ12Ico7v417/exec";
+// ══════════════════════════════════════════════
+//  URL de tu Google Apps Script
+// ══════════════════════════════════════════════
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxd0RsvyR4Znr_WmCVAOmMaEwjGfSEZLAFGzmb8g_zlMOTgSD6xVfyGVjEEs7DMTYhdWw/exec";
 
 const SECCIONES = {
-  mecanica: ["Lubricación","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyección","Sist. Dirección","Sist. Suspensión","Transmisión de potencia"],
-  soldadura: ["S Turbo","Chasis/Puente","Escape","Flexible","Silenciadores/base/tensor","Sinchos","Tanques de combustible","Tornamesa"],
-  electro: ["Alternador","Baterías","Cables","Chicote Eléctrico","Computadora","Fajas","Fusibles","Luces delanteras","Luces laterales","Luces pidevías","Luz Placa","Motor limpia brisas","Sportline","Starter","Stop"]
+  mecanica: ["Lubricacion","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyeccion","Sist. Direccion","Sist. Suspension","Transmision de potencia"],
+  soldadura: ['"S" Turbo',"Chasis/Puente","Escape","Flexible","Silenciadores/base/tensor","Sinchos","Tanques de combustible","Tornamesa"],
+  electro:   ["Alternador","Baterias","Cables","Chicote Electrico","Computadora","Fajas","Fusibles","Luces delanteras","Luces laterales","Luces pidevia","Luz Placa","Motor limpia brisas","Sportline","Starter","Stop"],
+  pintura:   ["Chapas","Cremalleras","Espejos","Estribos","Guarda Fango","Limpia brisas","Pin-puerta/picaporte","Pintura General","Puertas","Tablero","Vidrios"],
+  llantas:   ["Cambio","Reparacion","Revision","Rotacion"]
 };
+const CON_OBS = { mecanica: true };
 
+// ── Construir tablas ──
 function buildTables() {
   Object.keys(SECCIONES).forEach(sec => {
     const tbody = document.getElementById("tb-" + sec);
-    if (!tbody) return;
-    tbody.innerHTML = "";
-    
     SECCIONES[sec].forEach(item => {
-      const id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g, "_");
+      const id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g,"_");
       let tr = `<tr>
-        <td>${item}</td>
-        <td>
-          <div class="ors-group">
-            <input type="radio" name="${id}" id="${id}_ok" value="Ok" checked>
-            <label for="${id}_ok" class="ors-btn">Ok</label>
-            <input type="radio" name="${id}" id="${id}_r" value="R">
-            <label for="${id}_r" class="ors-btn">R</label>
-            <input type="radio" name="${id}" id="${id}_s" value="S">
-            <label for="${id}_s" class="ors-btn">S</label>
-          </div>
-        </td>`;
-      if (sec === 'mecanica') {
-        tr += `<td><input type="text" id="${id}_obs" style="width:100%; padding:4px; border:1px solid #ccc; border-radius:4px;"></td>`;
-      }
+        <td class="desc">${item}</td>
+        <td><div class="ors-group">
+          <input type="radio" name="${id}" id="${id}_ok" value="Ok">
+          <label for="${id}_ok" class="ors-btn">Ok</label>
+          <input type="radio" name="${id}" id="${id}_r" value="R">
+          <label for="${id}_r" class="ors-btn">R</label>
+          <input type="radio" name="${id}" id="${id}_s" value="S">
+          <label for="${id}_s" class="ors-btn">S</label>
+        </div></td>`;
+      if (CON_OBS[sec]) tr += `<td class="obs"><input type="text" id="${id}_obs" placeholder="Nota..."></td>`;
       tr += `</tr>`;
       tbody.innerHTML += tr;
     });
   });
 }
 
+// ── Canvas firmas ──
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+  canvas.width  = canvas.offsetWidth || 300;
+  canvas.height = 90;
+  function pos(e) { const r = canvas.getBoundingClientRect(); const s = e.touches?e.touches[0]:e; return {x:s.clientX-r.left, y:s.clientY-r.top}; }
+  canvas.addEventListener("pointerdown", e=>{drawing=true; ctx.beginPath(); const p=pos(e); ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener("pointermove", e=>{if(!drawing)return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle="#111"; ctx.lineWidth=2; ctx.lineCap="round"; ctx.stroke();});
+  canvas.addEventListener("pointerup",   ()=>drawing=false);
+  canvas.addEventListener("pointerleave",()=>drawing=false);
+}
+function clearCanvas(id){ const c=document.getElementById(id); c.getContext("2d").clearRect(0,0,c.width,c.height); }
+
+// ── Recolectar datos ──
 function getData() {
   const data = {
-    fecha: document.getElementById('fecha').value,
-    operador: document.getElementById('operador').value,
-    placa: document.getElementById('placa').value,
-    telefono: document.getElementById('telefono').value,
-    codigoCabezal: document.getElementById('codigoCabezal').value,
-    orden: document.getElementById('orden').value,
-    obsOperador: document.getElementById('obsOperador').value,
-    nombreOperador: document.getElementById('nombreOperador').value,
-    nombreAuditor: document.getElementById('nombreAuditor').value,
+    fecha:            document.getElementById("fecha").value,
+    operador:         document.getElementById("operador").value,
+    placa:            document.getElementById("placa").value,
+    telefono:         document.getElementById("telefono").value,
+    codigoCabezal:    document.getElementById("codigoCabezal").value,
+    orden:            document.getElementById("orden").value,
+    obsOperador:      document.getElementById("obsOperador").value,
+    obsMantenimiento: document.getElementById("obsMantenimiento").value,
+    nombreOperador:   document.getElementById("nombreOperador").value,
+    nombreAuditor:    document.getElementById("nombreAuditor").value,
     items: {}
   };
-
   Object.keys(SECCIONES).forEach(sec => {
     data.items[sec] = {};
     SECCIONES[sec].forEach(item => {
-      const id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g, "_");
+      const id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g,"_");
       const checked = document.querySelector(`input[name="${id}"]:checked`);
-      const obsEl = document.getElementById(id + "_obs");
-      data.items[sec][item] = {
-        estado: checked ? checked.value : 'Ok',
-        obs: obsEl ? obsEl.value : ''
-      };
+      const obsEl   = document.getElementById(id+"_obs");
+      data.items[sec][item] = { estado: checked?checked.value:"", obs: obsEl?obsEl.value:"" };
     });
   });
   return data;
 }
 
-function initCanvas(id) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
-  canvas.width = canvas.offsetWidth; 
-  canvas.height = 90;
-
-  function pos(e) { 
-    const r = canvas.getBoundingClientRect(); 
-    const s = e.touches ? e.touches[0] : e; 
-    return { x: s.clientX - r.left, y: s.clientY - r.top }; 
-  }
-  canvas.addEventListener('pointerdown', e => { drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); });
-  canvas.addEventListener('pointermove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke(); });
-  canvas.addEventListener('pointerup', () => drawing = false);
-}
-
-function procesarYEnviarWhatsApp() {
+// ══════════════════════════════════════════════
+//  ENVIAR → Apps Script (GET con callback JSONP)
+//  Evita el error CORS desde GitHub Pages
+// ══════════════════════════════════════════════
+function enviarReporte() {
   const d = getData();
-  if (!d.fecha || !d.placa) {
-    showToast("⚠️ Coloca la Fecha y Placa obligatoriamente");
-    return;
+  if (!d.fecha || !d.placa) { showToast("⚠️ Completa Fecha y Placa antes de enviar", true); return; }
+
+  setLoading(true);
+
+  // Usamos JSONP: inyectamos un <script> con callback, que Apps Script
+  // devuelve como: callback({...}) – esto no tiene restricción CORS.
+  const callbackName = "gsCallback_" + Date.now();
+  const dataStr = encodeURIComponent(JSON.stringify(d));
+  const url = `${APPS_SCRIPT_URL}?callback=${callbackName}&data=${dataStr}`;
+
+  // Timeout de seguridad (40 s)
+  const timeout = setTimeout(() => {
+    cleanup();
+    setLoading(false);
+    showToast("⏱ Tiempo agotado. Intenta de nuevo.", true);
+  }, 40000);
+
+  function cleanup() {
+    clearTimeout(timeout);
+    delete window[callbackName];
+    const s = document.getElementById("_gs_script");
+    if (s) s.remove();
   }
 
-  const loading = document.getElementById('loading');
-  const loadingTxt = document.getElementById('loading-txt');
-  loading.style.display = 'flex';
-  loadingTxt.textContent = "Guardando datos y generando PDF...";
+  // Función global que Apps Script llamará
+  window[callbackName] = function(response) {
+    cleanup();
+    setLoading(false);
 
-  const formData = new URLSearchParams();
-  formData.append('data', JSON.stringify(d));
-
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: formData.toString()
-  })
-  .then(res => res.text()) // Leemos la respuesta directamente como texto limpio
-  .then(pdfUrl => {
-    loading.style.display = 'none';
+    // response puede ser string (URL del PDF) u objeto {url, error}
+    let pdfUrl = "";
+    if (typeof response === "string") {
+      pdfUrl = response.trim();
+    } else if (response && response.url) {
+      pdfUrl = response.url.trim();
+    }
 
     if (pdfUrl && pdfUrl.startsWith("http")) {
-      let txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
-      txt += "━━━━━━━━━━━━━━━━━━━━\n";
-      txt += `📅 *Fecha:* ${d.fecha}\n`;
-      txt += `🚘 *Placa:* ${d.placa}\n`;
-      txt += `👤 *Operador:* ${d.operador || '—'}\n`;
-      txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
-      txt += `📄 *Ver PDF Completo:* \n${pdfUrl}\n`;
-      txt += "━━━━━━━━━━━━━━━━━━━━";
-
-      const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
-      window.open(urlWa, '_blank');
-      showToast("✅ ¡Enviado con éxito!");
+      abrirWhatsApp(d, pdfUrl);
+      showToast("✅ PDF generado – WhatsApp abierto");
     } else {
-      showToast("❌ Error: El servidor no devolvió una URL válida");
-      console.log("Respuesta recibida:", pdfUrl);
+      showToast("❌ El servidor no devolvió una URL válida", true);
+      console.error("Respuesta:", response);
     }
-  })
-  .catch(err => {
-    loading.style.display = 'none';
-    showToast("❌ Hubo un problema al conectar con el servidor");
-    console.error(err);
+  };
+
+  const script = document.createElement("script");
+  script.id  = "_gs_script";
+  script.src = url;
+  script.onerror = () => {
+    cleanup();
+    setLoading(false);
+    showToast("❌ No se pudo conectar al servidor", true);
+  };
+  document.body.appendChild(script);
+}
+
+// ── Abrir WhatsApp con PDF link ──
+function abrirWhatsApp(d, pdfUrl) {
+  const emojis = { Ok:"✅", R:"⚠️", S:"🔴", "":"⬜" };
+  let alertas = [];
+  Object.keys(SECCIONES).forEach(sec => {
+    SECCIONES[sec].forEach(item => {
+      const v = d.items[sec][item];
+      if (v.estado === "R" || v.estado === "S")
+        alertas.push(`${emojis[v.estado]} ${item}${v.obs?" – "+v.obs:""}`);
+    });
   });
+
+  let txt = `🚛 *REPORTE INSPECCIÓN INICIAL – CABEZAL*\n`;
+  txt += `━━━━━━━━━━━━━━━━━━━━\n`;
+  txt += `📅 *Fecha:* ${d.fecha||"—"}\n`;
+  txt += `🚘 *Placa:* ${d.placa||"—"}\n`;
+  txt += `👤 *Operador:* ${d.operador||"—"}\n`;
+  txt += `🔑 *Código:* ${d.codigoCabezal||"—"}   📋 *Orden:* ${d.orden||"—"}\n\n`;
+
+  if (alertas.length > 0) {
+    txt += `*⚠️ ÍTEMS CON NOVEDAD (${alertas.length}):*\n`;
+    alertas.forEach(a => txt += `  ${a}\n`);
+  } else {
+    txt += `*✅ Todos los ítems en estado OK*\n`;
+  }
+
+  if (d.obsOperador) txt += `\n📝 *Obs. Operador:* ${d.obsOperador}`;
+  if (d.obsMantenimiento) txt += `\n🛠 *Obs. Mantenimiento:* ${d.obsMantenimiento}`;
+  txt += `\n\n📄 *PDF completo:*\n${pdfUrl}`;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, "_blank");
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast'); 
-  t.textContent = msg; 
-  t.className = 'show';
-  setTimeout(() => { t.className = ''; }, 3500);
+// ── Reset ──
+function resetForm() {
+  if (!confirm("¿Limpiar todo el formulario?")) return;
+  document.querySelectorAll("input[type=radio]").forEach(r => r.checked=false);
+  document.querySelectorAll("input[type=text],input[type=tel],input[type=date],textarea").forEach(i => i.value="");
+  clearCanvas("firmaOperador"); clearCanvas("firmaAuditor");
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  buildTables(); 
-  initCanvas('firmaOperador'); 
-  initCanvas('firmaAuditor');
-  document.getElementById('fecha').valueAsDate = new Date();
+function setLoading(on) { document.getElementById("loading").classList.toggle("show", on); }
+function showToast(msg, error=false) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = error ? "error show" : "show";
+  setTimeout(() => t.className="", 4500);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  buildTables();
+  initCanvas("firmaOperador");
+  initCanvas("firmaAuditor");
+  document.getElementById("fecha").valueAsDate = new Date();
 });
 </script>
+
+<!--
+═══════════════════════════════════════════════════════════════
+  APPS SCRIPT ACTUALIZADO — reemplaza tu código completo con:
+═══════════════════════════════════════════════════════════════
+
+function doGet(e) {
+  return handleRequest(e);
+}
+function doPost(e) {
+  return handleRequest(e);
+}
+
+function handleRequest(e) {
+  const callback = e.parameter.callback || "";
+  try {
+    const data = JSON.parse(decodeURIComponent(e.parameter.data || "{}"));
+
+    // 1. Guardar en Sheets
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("Hoja 1") || ss.getSheets()[0];
+    const row = [new Date(), data.fecha, data.operador, data.placa,
+                 data.telefono, data.codigoCabezal, data.orden];
+    ["mecanica","soldadura","electro","pintura","llantas"].forEach(sec => {
+      if (data.items?.[sec]) {
+        Object.keys(data.items[sec]).forEach(item => {
+          const v = data.items[sec][item];
+          row.push(item + ": " + (v.estado||"") + (v.obs?" – "+v.obs:""));
+        });
+      }
+    });
+    row.push(data.obsOperador, data.obsMantenimiento,
+             data.nombreOperador, data.nombreAuditor);
+    sheet.appendRow(row);
+
+    // 2. Crear PDF en Drive
+    const doc  = DocumentApp.create("Inspeccion_" + data.placa + "_" + data.fecha);
+    const body = doc.getBody();
+    body.appendParagraph("DTT – INSPECCIÓN INICIAL CABEZAL")
+        .setHeading(DocumentApp.ParagraphHeading.HEADING1)
+        .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+    body.appendTable([
+      ["Fecha:", data.fecha||"—",     "Placa:",   data.placa||"—"],
+      ["Operador:", data.operador||"—","Teléfono:",data.telefono||"—"],
+      ["Código:",   data.codigoCabezal||"—","Orden:",data.orden||"—"]
+    ]);
+    body.appendParagraph("");
+
+    const secNombres = {mecanica:"MECÁNICA",soldadura:"SOLDADURA",
+                        electro:"ELECTROMECÁNICA",pintura:"PINTURA",llantas:"LLANTAS"};
+    Object.keys(secNombres).forEach(sec => {
+      if (!data.items?.[sec]) return;
+      body.appendParagraph(secNombres[sec])
+          .setHeading(DocumentApp.ParagraphHeading.HEADING2);
+      const rows = [["Descripción","Estado","Observaciones"]];
+      Object.keys(data.items[sec]).forEach(item => {
+        const v = data.items[sec][item];
+        rows.push([item, v.estado||"—", v.obs||"—"]);
+      });
+      body.appendTable(rows);
+      body.appendParagraph("");
+    });
+
+    if (data.obsOperador)
+      body.appendParagraph("OBS. OPERADOR: " + data.obsOperador);
+    if (data.obsMantenimiento)
+      body.appendParagraph("OBS. MANTENIMIENTO: " + data.obsMantenimiento);
+    body.appendParagraph("\nOperador: " + (data.nombreOperador||"—") +
+                         "          Auditor: " + (data.nombreAuditor||"—"));
+
+    doc.saveAndClose();
+    const pdfBlob = DriveApp.getFileById(doc.getId()).getAs("application/pdf");
+    const pdfFile = DriveApp.createFile(pdfBlob);
+    pdfFile.setName("Inspeccion_" + data.placa + "_" + data.fecha + ".pdf");
+    pdfFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    DriveApp.getFileById(doc.getId()).setTrashed(true);
+
+    const pdfUrl = pdfFile.getUrl();
+
+    // 3. Responder con JSONP
+    const out = callback
+      ? ContentService.createTextOutput(callback + "(" + JSON.stringify({url: pdfUrl}) + ")")
+          .setMimeType(ContentService.MimeType.JAVASCRIPT)
+      : ContentService.createTextOutput(JSON.stringify({url: pdfUrl}))
+          .setMimeType(ContentService.MimeType.JSON);
+    return out;
+
+  } catch(err) {
+    const errOut = callback
+      ? ContentService.createTextOutput(callback + "(" + JSON.stringify({error: err.toString()}) + ")")
+          .setMimeType(ContentService.MimeType.JAVASCRIPT)
+      : ContentService.createTextOutput(JSON.stringify({error: err.toString()}))
+          .setMimeType(ContentService.MimeType.JSON);
+    return errOut;
+  }
+}
+
+═══════════════════════════════════════════════════════════════
+  Después de pegar el código: Implementar → Nueva implementación
+  (vuelve a publicar, copia la NUEVA URL y actualiza APPS_SCRIPT_URL)
+═══════════════════════════════════════════════════════════════
+-->
 </body>
 </html>
