@@ -186,6 +186,7 @@
 <div id="toast"></div>
 
 <script>
+// TU NUEVA URL CORRECTA
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxd0RsvyR4Znr_WmCVAOmMaEwjGfSEZLAFGzmb8g_zlMOTgSD6xVfyGVjEEs7DMTYhdWw/exec";
 
 const SECCIONES = {
@@ -280,9 +281,8 @@ function procesarYEnviarWhatsApp() {
   const loading = document.getElementById('loading');
   const loadingTxt = document.getElementById('loading-txt');
   loading.style.display = 'flex';
-  loadingTxt.textContent = "Guardando en Google Sheets y creando PDF...";
+  loadingTxt.textContent = "Guardando datos y generando PDF...";
 
-  // Cambiado a codificación url classic para saltar restricciones CORS plenamente
   const formData = new URLSearchParams();
   formData.append('data', JSON.stringify(d));
 
@@ -296,13 +296,13 @@ function procesarYEnviarWhatsApp() {
     loading.style.display = 'none';
 
     if (result.status === 'ok' && result.pdfUrl) {
-      let txt = "Base de Datos DTT 🚀 *REPORTE DE INSPECCIÓN COMPLETO*\n";
+      let txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
       txt += "━━━━━━━━━━━━━━━━━━━━\n";
       txt += `📅 *Fecha:* ${d.fecha}\n`;
       txt += `🚘 *Placa:* ${d.placa}\n`;
       txt += `👤 *Operador:* ${d.operador || '—'}\n`;
       txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
-      txt += `📄 *Enlace Oficial al PDF:* \n${result.pdfUrl}\n`;
+      txt += `📄 *Ver PDF Completo:* \n${result.pdfUrl}\n`;
       txt += "━━━━━━━━━━━━━━━━━━━━";
 
       const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
