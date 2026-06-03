@@ -186,7 +186,7 @@
 <div id="toast"></div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZweV0oVZeMh-MCYvmWAJHnGCc-6uzZ5eiFXGjj1EGRDIxS2y6eojeKBlRs-_IdQ-Nxg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxd0RsvyR4Znr_WmCVAOmMaEwjGfSEZLAFGzmb8g_zlMOTgSD6xVfyGVjEEs7DMTYhdWw/exec";
 
 const SECCIONES = {
   mecanica: ["Lubricación","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyección","Sist. Dirección","Sist. Suspensión","Transmisión de potencia"],
@@ -270,7 +270,7 @@ function initCanvas(id) {
   canvas.addEventListener('pointerup', () => drawing = false);
 }
 
-async function procesarYEnviarWhatsApp() {
+function procesarYEnviarWhatsApp() {
   const d = getData();
   if (!d.fecha || !d.placa) {
     showToast("⚠️ Coloca la Fecha y Placa obligatoriamente");
@@ -282,36 +282,41 @@ async function procesarYEnviarWhatsApp() {
   loading.style.display = 'flex';
   loadingTxt.textContent = "Guardando en Google Sheets y creando PDF...";
 
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(d)
-    });
-    
-    const result = await response.json();
+  // Cambiado a codificación url classic para saltar restricciones CORS plenamente
+  const formData = new URLSearchParams();
+  formData.append('data', JSON.stringify(d));
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: formData.toString()
+  })
+  .then(res => res.json())
+  .then(result => {
     loading.style.display = 'none';
 
     if (result.status === 'ok' && result.pdfUrl) {
-      let txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
+      let txt = "Base de Datos DTT 🚀 *REPORTE DE INSPECCIÓN COMPLETO*\n";
       txt += "━━━━━━━━━━━━━━━━━━━━\n";
       txt += `📅 *Fecha:* ${d.fecha}\n`;
       txt += `🚘 *Placa:* ${d.placa}\n`;
       txt += `👤 *Operador:* ${d.operador || '—'}\n`;
       txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
-      txt += `📄 *Ver Reporte Completo en PDF:* \n${result.pdfUrl}\n`;
+      txt += `📄 *Enlace Oficial al PDF:* \n${result.pdfUrl}\n`;
       txt += "━━━━━━━━━━━━━━━━━━━━";
 
       const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
       window.open(urlWa, '_blank');
       showToast("✅ ¡Enviado con éxito!");
     } else {
-      showToast("❌ Error al generar el enlace del PDF");
+      showToast("❌ Error al procesar la respuesta del PDF");
     }
-  } catch (err) {
+  })
+  .catch(err => {
     loading.style.display = 'none';
     showToast("❌ Hubo un problema al conectar con el servidor");
     console.error(err);
-  }
+  });
 }
 
 function showToast(msg) {
