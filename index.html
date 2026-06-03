@@ -26,7 +26,6 @@
     min-height: 100vh;
   }
 
-  /* ── HEADER ── */
   header {
     background: var(--green);
     color: #fff;
@@ -38,247 +37,59 @@
     box-shadow: 0 3px 12px rgba(0,0,0,.25);
   }
   .logo-box {
-    background: var(--yellow);
-    color: var(--green);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 22px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    letter-spacing: 1px;
-    flex-shrink: 0;
+    background: var(--yellow); color: var(--green);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 22px;
+    padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; flex-shrink: 0;
   }
-  header h1 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: clamp(18px, 4vw, 26px);
-    letter-spacing: .5px;
-    line-height: 1.1;
-  }
+  header h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(18px, 4vw, 26px); line-height: 1.1; }
   header span { font-weight: 400; font-size: 13px; opacity: .85; display: block; }
 
-  /* ── MAIN WRAPPER ── */
-  .wrapper {
-    max-width: 780px;
-    margin: 22px auto;
-    padding: 0 14px 60px;
-  }
+  .wrapper { max-width: 780px; margin: 22px auto; padding: 0 14px 60px; }
 
-  /* ── CARD ── */
-  .card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    margin-bottom: 18px;
-    overflow: hidden;
-  }
-  .card-header {
-    background: var(--green);
-    color: #fff;
-    padding: 10px 16px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-header .icon { font-size: 17px; }
+  .card { background: #fff; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden; page-break-inside: avoid; }
+  .card-header { background: var(--green); color: #fff; padding: 10px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
   .card-body { padding: 16px; }
 
-  /* ── META GRID ── */
-  .meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
-  }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
   @media(max-width:480px){ .meta-grid { grid-template-columns: 1fr; } }
 
-  .field label {
-    display: block;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-    color: #555;
-    margin-bottom: 4px;
-  }
-  .field input, .field textarea {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    padding: 9px 11px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    color: var(--dark);
-    background: var(--gray);
-    transition: border .2s, background .2s;
-  }
-  .field input:focus, .field textarea:focus {
-    outline: none;
-    border-color: var(--green2);
-    background: #fff;
-  }
-  .field textarea { resize: vertical; min-height: 70px; }
+  .field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px; }
+  .field input, .field textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 6px; padding: 9px 11px; font-family: 'Barlow', sans-serif; font-size: 14px; background: var(--gray); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--green2); background: #fff; }
 
-  /* ── INSPECTION TABLE ── */
   .insp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .insp-table th {
-    background: #e8f5e9;
-    color: var(--green);
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    padding: 7px 10px;
-    text-align: center;
-    border-bottom: 2px solid var(--green2);
-  }
-  .insp-table th:first-child { text-align: left; }
-  .insp-table td {
-    padding: 7px 8px;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
-  }
-  .insp-table tr:last-child td { border-bottom: none; }
-  .insp-table tr:hover td { background: #f9fbe7; }
-  .insp-table td.desc { font-weight: 500; }
-  .insp-table td.obs input {
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px 7px;
-    font-size: 13px;
-    background: var(--gray);
-  }
-  .insp-table td.obs input:focus {
-    outline: none; border-color: var(--green2); background: #fff;
-  }
+  .insp-table th { background: #e8f5e9; color: var(--green); font-weight: 700; font-size: 11px; padding: 7px 10px; border-bottom: 2px solid var(--green2); }
+  .insp-table td { padding: 7px 8px; border-bottom: 1px solid #eee; }
 
-  /* ── RADIO BUTTONS ── */
   .ors-group { display: flex; gap: 3px; justify-content: center; }
   .ors-group input[type=radio] { display: none; }
-  .ors-btn {
-    min-width: 30px; height: 28px;
-    border-radius: 5px;
-    border: 1.5px solid #ccc;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
-    cursor: pointer;
-    background: #fff; color: #999;
-    transition: all .15s;
-    padding: 0 6px;
-    white-space: nowrap;
-  }
-  .ors-group input[type=radio][value="Ok"]:checked  + .ors-btn { background:#43a047; border-color:#43a047; color:#fff; }
-  .ors-group input[type=radio][value="R"]:checked   + .ors-btn { background:#f9a825; border-color:#f9a825; color:#fff; }
-  .ors-group input[type=radio][value="S"]:checked   + .ors-btn { background:#c62828; border-color:#c62828; color:#fff; }
+  .ors-btn { min-width: 35px; height: 28px; border-radius: 5px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; color: #999; background: #fff; }
+  
+  .ors-group input[type=radio][value="Ok"]:checked + .ors-btn { background:#43a047; border-color:#43a047; color:#fff; }
+  .ors-group input[type=radio][value="R"]:checked  + .ors-btn { background:#f9a825; border-color:#f9a825; color:#fff; }
+  .ors-group input[type=radio][value="S"]:checked  + .ors-btn { background:#c62828; border-color:#c62828; color:#fff; }
 
-  /* Legend */
-  .legend {
-    display: flex; gap: 12px; flex-wrap: wrap;
-    font-size: 12px; padding: 6px 16px 10px;
-    color: #666;
-  }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; padding: 6px 16px 10px; color: #666; }
   .legend span { display: flex; align-items: center; gap: 5px; }
   .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-  .dot-ok { background: #43a047; }
-  .dot-r  { background: #f9a825; }
-  .dot-s  { background: #c62828; }
 
-  .two-col-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 18px;
-  }
+  .two-col-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
   @media(max-width:580px){ .two-col-wrapper { grid-template-columns: 1fr; } }
-  .two-col-wrapper .card { margin-bottom: 0; }
 
-  /* ── FIRMAS ── */
-  .firmas-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  }
+  .firmas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media(max-width:480px){ .firmas-grid { grid-template-columns: 1fr; } }
-  .firma-box { text-align: center; }
-  .firma-box label { font-size: 12px; font-weight: 600; color: #555; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
-  .firma-box canvas {
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    background: var(--gray);
-    width: 100%;
-    height: 90px;
-    cursor: crosshair;
-    touch-action: none;
-  }
-  .firma-clear {
-    font-size: 11px; color: var(--red); cursor: pointer;
-    background: none; border: none; margin-top: 3px;
-    font-family: 'Barlow', sans-serif; font-weight: 600;
-  }
+  .firma-box canvas { border: 1.5px solid var(--border); border-radius: 6px; background: var(--gray); width: 100%; height: 90px; touch-action: none; }
 
-  /* ── BOTONES ── */
-  .btn-row {
-    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-    margin-top: 10px;
-  }
-  .btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 13px 28px;
-    border-radius: 8px;
-    border: none; cursor: pointer;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700; font-size: 16px; letter-spacing: .5px;
-    text-transform: uppercase;
-    transition: transform .15s, box-shadow .15s, opacity .15s;
-    box-shadow: 0 3px 10px rgba(0,0,0,.18);
-  }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.22); }
-  .btn:active { transform: translateY(0); }
-  .btn-send  { background: var(--green);  color: #fff; }
-  .btn-wa    { background: #25d366;        color: #fff; }
-  .btn-reset { background: #fff;           color: var(--green); border: 2px solid var(--green); }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+  .btn { display: flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; text-transform: uppercase; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+  .btn-wa { background: #25d366; color: #fff; width: 100%; max-width: 400px; justify-content: center; font-size: 18px; }
 
-  /* ── TOAST ── */
-  #toast {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--green); color: #fff;
-    padding: 12px 26px; border-radius: 30px;
-    font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700;
-    box-shadow: 0 4px 20px rgba(0,0,0,.25);
-    transition: transform .35s cubic-bezier(.34,1.56,.64,1);
-    z-index: 999; pointer-events: none; white-space: nowrap;
-  }
-  #toast.show { transform: translateX(-50%) translateY(0); }
-  #toast.error { background: var(--red); }
-
-  /* ── LOADING OVERLAY ── */
-  #loading {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.45); z-index: 998;
-    align-items: center; justify-content: center; flex-direction: column; gap: 14px;
-  }
-  #loading.show { display: flex; }
-  .spinner {
-    width: 46px; height: 46px; border: 5px solid rgba(255,255,255,.3);
-    border-top-color: var(--yellow); border-radius: 50%;
-    animation: spin .8s linear infinite;
-  }
+  #loading { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 998; align-items: center; justify-content: center; flex-direction: column; gap: 14px; color: #fff; font-weight: 600; }
+  .spinner { width: 46px; height: 46px; border: 5px solid rgba(255,255,255,.3); border-top-color: var(--yellow); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #loading p { color: #fff; font-weight: 600; font-size: 15px; }
-
-  /* ── NOTICE ── */
-  .notice {
-    background: #fff8e1; border-left: 4px solid var(--yellow);
-    border-radius: 6px; padding: 12px 16px; font-size: 13px; margin-bottom: 18px; line-height: 1.6;
-  }
-  .notice strong { color: var(--green); }
-  .notice code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: #fff; padding: 12px 26px; border-radius: 30px; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; transition: transform .35s; z-index: 999; }
+  #toast.show { transform: translateX(-50%) translateY(0); }
 </style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -291,13 +102,8 @@
 </header>
 
 <div class="wrapper">
-
-  <div class="notice" id="configNotice">
-    ⚙️ <strong>Configuración requerida:</strong> Abre este archivo en un editor de texto y reemplaza la URL de tu Google Apps Script. Ver instrucciones al final.
-  </div>
-
   <div class="card">
-    <div class="card-header"><span class="icon">📋</span> Datos Generales</div>
+    <div class="card-header">📋 Datos Generales</div>
     <div class="card-body">
       <div class="meta-grid">
         <div class="field"><label>Fecha</label><input type="date" id="fecha" required></div>
@@ -311,16 +117,16 @@
   </div>
 
   <div class="legend">
-    <span><span class="dot dot-ok"></span> Ok – Sin novedad</span>
-    <span><span class="dot dot-r"></span> R – Requiere revisión</span>
-    <span><span class="dot dot-s"></span> S – Fuera de servicio</span>
+    <span><span class="dot" style="background:#43a047"></span> Ok</span>
+    <span><span class="dot" style="background:#f9a825"></span> R (Revisión)</span>
+    <span><span class="dot" style="background:#c62828"></span> S (Fuera de Servicio)</span>
   </div>
 
   <div class="card">
-    <div class="card-header"><span class="icon">🔧</span> Mecánica</div>
+    <div class="card-header">🔧 Mecánica</div>
     <div class="card-body" style="padding:0">
       <table class="insp-table">
-        <thead><tr><th>Descripción</th><th>Estado</th><th style="min-width:130px">Observaciones</th></tr></thead>
+        <thead><tr><th>Descripción</th><th>Estado</th><th>Observaciones</th></tr></thead>
         <tbody id="tb-mecanica"></tbody>
       </table>
     </div>
@@ -328,7 +134,7 @@
 
   <div class="two-col-wrapper">
     <div class="card">
-      <div class="card-header"><span class="icon">🔩</span> Soldadura</div>
+      <div class="card-header">🔩 Soldadura</div>
       <div class="card-body" style="padding:0">
         <table class="insp-table">
           <thead><tr><th>Descripción</th><th>Estado</th></tr></thead>
@@ -337,7 +143,7 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-header"><span class="icon">⚡</span> Electromecánica</div>
+      <div class="card-header">⚡ Electromecánica</div>
       <div class="card-body" style="padding:0">
         <table class="insp-table">
           <thead><tr><th>Descripción</th><th>Estado</th></tr></thead>
@@ -347,99 +153,47 @@
     </div>
   </div>
 
-  <div class="two-col-wrapper">
-    <div class="card">
-      <div class="card-header"><span class="icon">🎨</span> Pintura</div>
-      <div class="card-body" style="padding:0">
-        <table class="insp-table">
-          <thead><tr><th>Descripción</th><th>Estado</th></tr></thead>
-          <tbody id="tb-pintura"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header"><span class="icon">🛞</span> Llantas</div>
-      <div class="card-body" style="padding:0">
-        <table class="insp-table">
-          <thead><tr><th>Descripción</th><th>Estado</th></tr></thead>
-          <tbody id="tb-llantas"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
   <div class="card">
-    <div class="card-header"><span class="icon">📝</span> Observaciones</div>
+    <div class="card-header">📝 Observaciones y Firmas</div>
     <div class="card-body">
       <div class="field" style="margin-bottom:12px">
-        <label>Observaciones – Operador</label>
-        <textarea id="obsOperador" placeholder="Anote cualquier novedad observada..."></textarea>
+        <label>Observaciones</label>
+        <textarea id="obsOperador" placeholder="Novedades detectadas..."></textarea>
       </div>
-      <div class="field">
-        <label>Observaciones – Personal de Mantenimiento</label>
-        <textarea id="obsMantenimiento" placeholder="Anote recomendaciones o acciones a tomar..."></textarea>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><span class="icon">✍️</span> Firmas</div>
-    <div class="card-body">
       <div class="firmas-grid">
         <div class="firma-box">
           <label>Nombre Operador</label>
-          <input type="text" id="nombreOperador" placeholder="Nombre completo" style="width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:14px;margin-bottom:8px;background:var(--gray)">
-          <label>Firma Operador</label>
-          <canvas id="firmaOperador" width="300" height="90"></canvas>
-          <button class="firma-clear" onclick="clearCanvas('firmaOperador')">✕ Limpiar</button>
+          <input type="text" id="nombreOperador" placeholder="Nombre">
+          <canvas id="firmaOperador"></canvas>
         </div>
         <div class="firma-box">
-          <label>Nombre Auditor de Campo</label>
-          <input type="text" id="nombreAuditor" placeholder="Nombre completo" style="width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:14px;margin-bottom:8px;background:var(--gray)">
-          <label>Firma Auditor de Campo</label>
-          <canvas id="firmaAuditor" width="300" height="90"></canvas>
-          <button class="firma-clear" onclick="clearCanvas('firmaAuditor')">✕ Limpiar</button>
+          <label>Nombre Auditor</label>
+          <input type="text" id="nombreAuditor" placeholder="Nombre">
+          <canvas id="firmaAuditor"></canvas>
         </div>
       </div>
     </div>
   </div>
 
   <div class="btn-row">
-    <button class="btn btn-send" onclick="enviarFormulario()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
-      Guardar en Google Sheets
-    </button>
-    <button class="btn btn-wa" onclick="compartirWhatsApp()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Compartir por WhatsApp
-    </button>
-    <button class="btn btn-reset" onclick="resetForm()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-      Nuevo
+    <button class="btn btn-wa" onclick="procesarYEnviarWhatsApp()">
+      🚀 ENVIAR REPORTE POR WHATSAPP
     </button>
   </div>
-
 </div>
 
-<div id="loading">
-  <div class="spinner"></div>
-  <p>Procesando información…</p>
-</div>
-
+<div id="loading"><div class="spinner"></div><p id="loading-txt">Procesando inspección...</p></div>
 <div id="toast"></div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQyILIK02YEwuWXqL8IZ9s4nNLhj3NgBP-5yDOEgKzbkrCgv0s6SB0aLYhI_xVrYp3-w/exec";
+// ⚠️ PEGA AQUÍ TU NUEVA URL DE GOOGLE APPS SCRIPT GENERADA EN EL PASO 1
+const APPS_SCRIPT_URL = "PEGA_AQUI_TU_NUEVA_URL_DE_APPS_SCRIPT";
 
 const SECCIONES = {
   mecanica: ["Lubricación","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyección","Sist. Dirección","Sist. Suspensión","Transmisión de potencia"],
   soldadura: ['"S" Turbo',"Chasis/Puente","Escape","Flexible","Silenciadores/base/tensor","Sinchos","Tanques de combustible","Tornamesa"],
-  electro: ["Alternador","Baterías","Cables","Chicote Eléctrico","Computadora","Fajas","Fusibles","Luces delanteras","Luces laterales","Luces pidevías","Luz Placa","Motor limpia brisas","Sportline","Starter","Stop"],
-  pintura: ["Chapas","Cremalleras","Espejos","Estribos","Guarda Fango","Limpia brisas","Pin-puerta/picaporte","Pintura General","Puertas","Tablero","Vidrios"],
-  llantas: ["Cambio","Reparación","Revisión","Rotación"]
+  electro: ["Alternador","Baterías","Cables","Chicote Eléctrico","Computadora","Fajas","Fusibles","Luces delanteras","Luces laterales","Luces pidevías","Luz Placa","Motor limpia brisas","Sportline","Starter","Stop"]
 };
-
-const CON_OBS = { mecanica: true, soldadura: false, electro: false, pintura: false, llantas: false };
 
 function buildTables() {
   Object.keys(SECCIONES).forEach(sec => {
@@ -448,7 +202,7 @@ function buildTables() {
     SECCIONES[sec].forEach(item => {
       const id = `${sec}_${item.replace(/[^a-zA-Z0-9]/g,'_')}`;
       let tr = `<tr>
-        <td class="desc">${item}</td>
+        <td>${item}</td>
         <td>
           <div class="ors-group">
             <input type="radio" name="${id}" id="${id}_ok" value="Ok">
@@ -459,44 +213,11 @@ function buildTables() {
             <label for="${id}_s" class="ors-btn">S</label>
           </div>
         </td>`;
-      if (CON_OBS[sec]) {
-        tr += `<td class="obs"><input type="text" id="${id}_obs" placeholder="Nota..."></td>`;
-      }
+      if(sec === 'mecanica') tr += `<td><input type="text" id="${id}_obs" style="width:100%; padding:4px; border:1px solid #ccc; border-radius:4px;"></td>`;
       tr += `</tr>`;
       tbody.innerHTML += tr;
     });
   });
-}
-
-function initCanvas(id) {
-  const canvas = document.getElementById(id);
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
-  
-  const ro = new ResizeObserver(() => {
-    const img = canvas.toDataURL();
-    canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-    canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    const i = new Image(); i.onload = () => ctx.drawImage(i,0,0); i.src = img;
-  });
-  ro.observe(canvas);
-
-  function pos(e) {
-    const r = canvas.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - r.left, y: src.clientY - r.top };
-  }
-  canvas.addEventListener('pointerdown', e => { drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x,p.y); });
-  canvas.addEventListener('pointermove', e => { if(!drawing) return; const p = pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
-  canvas.addEventListener('pointerup', () => drawing = false);
-  canvas.addEventListener('pointerleave', () => drawing = false);
-}
-
-function clearCanvas(id) {
-  const c = document.getElementById(id);
-  if(c) c.getContext('2d').clearRect(0,0,c.width,c.height);
 }
 
 function getData() {
@@ -508,11 +229,8 @@ function getData() {
     codigoCabezal: document.getElementById('codigoCabezal').value,
     orden: document.getElementById('orden').value,
     obsOperador: document.getElementById('obsOperador').value,
-    obsMantenimiento: document.getElementById('obsMantenimiento').value,
     nombreOperador: document.getElementById('nombreOperador').value,
     nombreAuditor: document.getElementById('nombreAuditor').value,
-    firmaOperador: document.getElementById('firmaOperador') ? document.getElementById('firmaOperador').toDataURL() : '',
-    firmaAuditor: document.getElementById('firmaAuditor') ? document.getElementById('firmaAuditor').toDataURL() : '',
     items: {}
   };
   Object.keys(SECCIONES).forEach(sec => {
@@ -522,7 +240,7 @@ function getData() {
       const checked = document.querySelector(`input[name="${id}"]:checked`);
       const obsEl = document.getElementById(`${id}_obs`);
       data.items[sec][item] = {
-        estado: checked ? checked.value : '',
+        estado: checked ? checked.value : 'Ok',
         obs: obsEl ? obsEl.value : ''
       };
     });
@@ -530,109 +248,71 @@ function getData() {
   return data;
 }
 
-async function enviarFormulario() {
-  const d = getData();
-  if (!d.fecha || !d.placa) {
-    showToast("⚠️ Completa Fecha y Placa antes de guardar", true); return;
-  }
-  document.getElementById('loading').classList.add('show');
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(d)
-    });
-    showToast("✅ ¡Guardado en Google Sheets!");
-  } catch(e) {
-    showToast("❌ Error al guardar. Revisa la URL.", true);
-  } finally {
-    document.getElementById('loading').classList.remove('show');
-  }
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  canvas.width = canvas.offsetWidth; canvas.height = 90;
+  function pos(e) { const r = canvas.getBoundingClientRect(); const s = e.touches ? e.touches[0] : e; return { x: s.clientX - r.left, y: s.clientY - r.top }; }
+  canvas.addEventListener('pointerdown', e => { drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x,p.y); });
+  canvas.addEventListener('pointermove', e => { if(!drawing) return; const p = pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.stroke(); });
+  canvas.addEventListener('pointerup', () => drawing = false);
 }
 
-function compartirWhatsApp() {
+function procesarYEnviarWhatsApp() {
   const d = getData();
   if (!d.fecha || !d.placa) {
-    showToast("⚠️ Completa Fecha y Placa antes de exportar", true);
+    showToast("⚠️ Coloca la Fecha y Placa obligatoriamente");
     return;
   }
 
-  if (typeof html2pdf === "undefined") {
-    showToast("❌ Error crítico: Librería PDF no disponible.", true);
-    return;
-  }
+  const loading = document.getElementById('loading');
+  const loadingTxt = document.getElementById('loading-txt');
+  loading.style.display = 'flex';
+  loadingTxt.textContent = "Guardando en la base de datos y creando PDF...";
 
-  const loadingEl = document.getElementById('loading');
-  loadingEl.classList.add('show');
-  const loadingText = document.querySelector('#loading p');
-  if (loadingText) loadingText.textContent = "Generando PDF de Inspección...";
+  // Enviamos los datos al script de Google para almacenar y renderizar el PDF en la nube
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(d)
+  })
+  .then(res => res.json())
+  .then(response => {
+    loading.style.display = 'none';
+    if(response.status === 'ok' && response.pdfUrl) {
+      
+      // Armamos el texto definitivo para enviar por WhatsApp incluyendo el link del PDF de una vez
+      let txt = `🚛 *REPORTE DE INSPECCIÓN INICIAL*\n`;
+      txt += `━━━━━━━━━━━━━━━━━━━━\n`;
+      txt += `📅 *Fecha:* ${d.fecha}\n`;
+      txt += `🚘 *Placa:* ${d.placa}\n`;
+      txt += `👤 *Operador:* ${d.operador || '—'}\n`;
+      txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
+      txt += `📄 *Ver Reporte Completo en PDF:* \n${response.pdfUrl}\n`;
+      txt += `━━━━━━━━━━━━━━━━━━━━`;
 
-  // Ocultar elementos innecesarios en la impresión
-  const notice = document.getElementById('configNotice');
-  const btnRow = document.querySelector('.btn-row');
-  if (notice) notice.style.display = 'none';
-  if (btnRow) btnRow.style.display = 'none';
-
-  const elementoAImprimir = document.querySelector('.wrapper');
-  const opciones = {
-    margin: [12, 12, 12, 12],
-    filename: `Inspeccion_Cabezal_${d.placa.replace(/[^a-zA-Z0-9]/g,'')}_${d.fecha}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, logging: false },
-    jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opciones).from(elementoAImprimir).save().then(() => {
-    if (notice) notice.style.display = 'block';
-    if (btnRow) btnRow.style.display = 'flex';
-    loadingEl.classList.remove('show');
-
-    // Construir texto descriptivo para el chat
-    let txt = `🚛 *INSPECCIÓN INICIAL CABEZAL*\n`;
-    txt += `━━━━━━━━━━━━━━━━━━━━\n`;
-    txt += `📅 *Fecha:* ${d.fecha || '—'}\n`;
-    txt += `🚘 *Placa:* ${d.placa || '—'}\n`;
-    txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n`;
-    txt += `👤 *Operador:* ${d.operador || '—'}\n\n`;
-    txt += `📎 _El documento PDF ha sido descargado en tu dispositivo. Adjúntalo a esta conversación de WhatsApp._`;
-
-    const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
-    window.open(urlWa, '_blank');
-    
-    showToast("✅ PDF Creado con éxito");
-  }).catch(err => {
-    console.error(err);
-    if (notice) notice.style.display = 'block';
-    if (btnRow) btnRow.style.display = 'flex';
-    loadingEl.classList.remove('show');
-    showToast("❌ Error al renderizar PDF", true);
+      const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
+      window.open(urlWa, '_blank');
+      showToast("✅ ¡Enviado con éxito!");
+    } else {
+      showToast("❌ Error al generar el enlace del PDF");
+    }
+  })
+  .catch(err => {
+    loading.style.display = 'none';
+    showToast("❌ Hubo un problema al conectar con el servidor");
   });
 }
 
-function resetForm() {
-  if (!confirm("¿Limpiar todo el formulario?")) return;
-  document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
-  document.querySelectorAll('input[type=text], input[type=tel], input[type=date], textarea').forEach(i => i.value = '');
-  clearCanvas('firmaOperador'); clearCanvas('firmaAuditor');
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function showToast(msg, error=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = error ? 'error show' : 'show';
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.className = 'show';
   setTimeout(() => t.className = '', 3500);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  buildTables();
-  initCanvas('firmaOperador');
-  initCanvas('firmaAuditor');
+  buildTables(); initCanvas('firmaOperador'); initCanvas('firmaAuditor');
   document.getElementById('fecha').valueAsDate = new Date();
-  if (APPS_SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbwQyILIK02YEwuWXqL8IZ9s4nNLhj3NgBP-5yDOEgKzbkrCgv0s6SB0aLYhI_xVrYp3-w/exec") {
-    document.getElementById('configNotice').style.display = 'none';
-  }
 });
 </script>
 </body>
