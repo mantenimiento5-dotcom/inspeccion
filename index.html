@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inspección Inicial – Cabezal</title>
-<link href="https://script.google.com/macros/s/AKfycbzzoQQQXMtNh6xDp9AFOTjU5jvJxTDls06y5p5bTGVO3ILsFLMnsk_VJIMvTkCzKCHb/exec" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --green:  #2e7d32;
@@ -46,7 +46,7 @@
 
   .wrapper { max-width: 780px; margin: 22px auto; padding: 0 14px 60px; }
 
-  .card { background: #fff; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden; page-break-inside: avoid; }
+  .card { background: #fff; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden; }
   .card-header { background: var(--green); color: #fff; padding: 10px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
   .card-body { padding: 16px; }
 
@@ -186,8 +186,7 @@
 <div id="toast"></div>
 
 <script>
-// ⚠️ PEGA AQUÍ TU NUEVA URL DE GOOGLE APPS SCRIPT GENERADA EN EL PASO 1
-const APPS_SCRIPT_URL = "PEGA_AQUI_TU_NUEVA_URL_DE_APPS_SCRIPT";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzoQQQXMtNh6xDp9AFOTjU5jvJxTDls06y5p5bTGVO3ILsFLMnsk_VJIMvTkCzKCHb/exec";
 
 const SECCIONES = {
   mecanica: ["Lubricación","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyección","Sist. Dirección","Sist. Suspensión","Transmisión de potencia"],
@@ -270,50 +269,11 @@ function procesarYEnviarWhatsApp() {
   const loading = document.getElementById('loading');
   const loadingTxt = document.getElementById('loading-txt');
   loading.style.display = 'flex';
-  loadingTxt.textContent = "Guardando en la base de datos y creando PDF...";
+  loadingTxt.textContent = "Guardando en Google Sheets y creando PDF...";
 
-  // Enviamos los datos al script de Google para almacenar y renderizar el PDF en la nube
   fetch(APPS_SCRIPT_URL, {
     method: 'POST',
     body: JSON.stringify(d)
   })
   .then(res => res.json())
-  .then(response => {
-    loading.style.display = 'none';
-    if(response.status === 'ok' && response.pdfUrl) {
-      
-      // Armamos el texto definitivo para enviar por WhatsApp incluyendo el link del PDF de una vez
-      let txt = `🚛 *REPORTE DE INSPECCIÓN INICIAL*\n`;
-      txt += `━━━━━━━━━━━━━━━━━━━━\n`;
-      txt += `📅 *Fecha:* ${d.fecha}\n`;
-      txt += `🚘 *Placa:* ${d.placa}\n`;
-      txt += `👤 *Operador:* ${d.operador || '—'}\n`;
-      txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
-      txt += `📄 *Ver Reporte Completo en PDF:* \n${response.pdfUrl}\n`;
-      txt += `━━━━━━━━━━━━━━━━━━━━`;
-
-      const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
-      window.open(urlWa, '_blank');
-      showToast("✅ ¡Enviado con éxito!");
-    } else {
-      showToast("❌ Error al generar el enlace del PDF");
-    }
-  })
-  .catch(err => {
-    loading.style.display = 'none';
-    showToast("❌ Hubo un problema al conectar con el servidor");
-  });
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.className = 'show';
-  setTimeout(() => t.className = '', 3500);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  buildTables(); initCanvas('firmaOperador'); initCanvas('firmaAuditor');
-  document.getElementById('fecha').valueAsDate = new Date();
-});
-</script>
-</body>
-</html>
+  .then(response =>
