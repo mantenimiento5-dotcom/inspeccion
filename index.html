@@ -102,7 +102,6 @@
 </header>
 
 <div class="wrapper">
-  <!-- DATOS GENERALES -->
   <div class="card">
     <div class="card-header">📋 Datos Generales</div>
     <div class="card-body">
@@ -123,7 +122,6 @@
     <span><span class="dot" style="background:#c62828"></span> S (Fuera de Servicio)</span>
   </div>
 
-  <!-- SECCIONES -->
   <div class="card">
     <div class="card-header">🔧 Mecánica</div>
     <div class="card-body" style="padding:0">
@@ -177,7 +175,6 @@
     </div>
   </div>
 
-  <!-- BOTÓN AUTOMÁTICO -->
   <div class="btn-row">
     <button class="btn btn-wa" onclick="procesarYEnviarWhatsApp()">
       🚀 ENVIAR REPORTE POR WHATSAPP
@@ -189,7 +186,6 @@
 <div id="toast"></div>
 
 <script>
-// URL NUEVA Y CONFIGURADA COMPLETAMENTE
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZweV0oVZeMh-MCYvmWAJHnGCc-6uzZ5eiFXGjj1EGRDIxS2y6eojeKBlRs-_IdQ-Nxg/exec";
 
 const SECCIONES = {
@@ -199,41 +195,36 @@ const SECCIONES = {
 };
 
 function buildTables() {
-  var tbodyMec = document.getElementById("tb-mecanica");
-  if(tbodyMec) tbodyMec.innerHTML = "";
-  var tbodySold = document.getElementById("tb-soldadura");
-  if(tbodySold) tbodySold.innerHTML = "";
-  var tbodyElec = document.getElementById("tb-electro");
-  if(tbodyElec) tbodyElec.innerHTML = "";
-
-  Object.keys(SECCIONES).forEach(function(sec) {
-    var tbody = document.getElementById("tb-" + sec);
-    if(!tbody) return;
-    SECCIONES[sec].forEach(function(item) {
-      var id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g,"_");
-      var tr = "<tr>" +
-        "<td>" + item + "</td>" +
-        "<td>" +
-          "<div class='ors-group'>" +
-            "<input type='radio' name='" + id + "' id='" + id + "_ok' value='Ok' checked>" +
-            "<label for='" + id + "_ok' class='ors-btn'>Ok</label>" +
-            "<input type='radio' name='" + id + "' id='" + id + "_r' value='R'>" +
-            "<label for='" + id + "_r' class='ors-btn'>R</label>" +
-            "<input type='radio' name='" + id + "' id='" + id + "_s' value='S'>" +
-            "<label for='" + id + "_s' class='ors-btn'>S</label>" +
-          "</div>" +
-        "</td>";
-      if(sec === 'mecanica') {
-        tr += "<td><input type='text' id='" + id + "_obs' style='width:100%; padding:4px; border:1px solid #ccc; border-radius:4px;'></td>";
+  Object.keys(SECCIONES).forEach(sec => {
+    const tbody = document.getElementById("tb-" + sec);
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    
+    SECCIONES[sec].forEach(item => {
+      const id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g, "_");
+      let tr = `<tr>
+        <td>${item}</td>
+        <td>
+          <div class="ors-group">
+            <input type="radio" name="${id}" id="${id}_ok" value="Ok" checked>
+            <label for="${id}_ok" class="ors-btn">Ok</label>
+            <input type="radio" name="${id}" id="${id}_r" value="R">
+            <label for="${id}_r" class="ors-btn">R</label>
+            <input type="radio" name="${id}" id="${id}_s" value="S">
+            <label for="${id}_s" class="ors-btn">S</label>
+          </div>
+        </td>`;
+      if (sec === 'mecanica') {
+        tr += `<td><input type="text" id="${id}_obs" style="width:100%; padding:4px; border:1px solid #ccc; border-radius:4px;"></td>`;
       }
-      tr += "</tr>";
+      tr += `</tr>`;
       tbody.innerHTML += tr;
     });
   });
 }
 
 function getData() {
-  var data = {
+  const data = {
     fecha: document.getElementById('fecha').value,
     operador: document.getElementById('operador').value,
     placa: document.getElementById('placa').value,
@@ -245,12 +236,13 @@ function getData() {
     nombreAuditor: document.getElementById('nombreAuditor').value,
     items: {}
   };
-  Object.keys(SECCIONES).forEach(function(sec) {
+
+  Object.keys(SECCIONES).forEach(sec => {
     data.items[sec] = {};
-    SECCIONES[sec].forEach(function(item) {
-      var id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g,"_");
-      var checked = document.querySelector("input[name='" + id + "']:checked");
-      var obsEl = document.getElementById(id + "_obs");
+    SECCIONES[sec].forEach(item => {
+      const id = sec + "_" + item.replace(/[^a-zA-Z0-9]/g, "_");
+      const checked = document.querySelector(`input[name="${id}"]:checked`);
+      const obsEl = document.getElementById(id + "_obs");
       data.items[sec][item] = {
         estado: checked ? checked.value : 'Ok',
         obs: obsEl ? obsEl.value : ''
@@ -261,70 +253,75 @@ function getData() {
 }
 
 function initCanvas(id) {
-  var canvas = document.getElementById(id);
-  if(!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var drawing = false;
-  canvas.width = canvas.offsetWidth; canvas.height = 90;
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  canvas.width = canvas.offsetWidth; 
+  canvas.height = 90;
+
   function pos(e) { 
-    var r = canvas.getBoundingClientRect(); 
-    var s = e.touches ? e.touches[0] : e; 
+    const r = canvas.getBoundingClientRect(); 
+    const s = e.touches ? e.touches[0] : e; 
     return { x: s.clientX - r.left, y: s.clientY - r.top }; 
   }
-  canvas.addEventListener('pointerdown', function(e) { drawing = true; ctx.beginPath(); var p = pos(e); ctx.moveTo(p.x,p.y); });
-  canvas.addEventListener('pointermove', function(e) { if(!drawing) return; var p = pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.stroke(); });
-  canvas.addEventListener('pointerup', function() { drawing = false; });
+  canvas.addEventListener('pointerdown', e => { drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('pointermove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke(); });
+  canvas.addEventListener('pointerup', () => drawing = false);
 }
 
-function procesarYEnviarWhatsApp() {
-  var d = getData();
+async function procesarYEnviarWhatsApp() {
+  const d = getData();
   if (!d.fecha || !d.placa) {
     showToast("⚠️ Coloca la Fecha y Placa obligatoriamente");
     return;
   }
 
-  var loading = document.getElementById('loading');
-  var loadingTxt = document.getElementById('loading-txt');
+  const loading = document.getElementById('loading');
+  const loadingTxt = document.getElementById('loading-txt');
   loading.style.display = 'flex';
   loadingTxt.textContent = "Guardando en Google Sheets y creando PDF...";
 
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'cors',
-    body: JSON.stringify(d)
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(response) {
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(d)
+    });
+    
+    const result = await response.json();
     loading.style.display = 'none';
-    if(response.status === 'ok' && response.pdfUrl) {
-      var txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
+
+    if (result.status === 'ok' && result.pdfUrl) {
+      let txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
       txt += "━━━━━━━━━━━━━━━━━━━━\n";
-      txt += "📅 *Fecha:* " + d.fecha + "\n";
-      txt += "🚘 *Placa:* " + d.placa + "\n";
-      txt += "👤 *Operador:* " + (d.operador || '—') + "\n";
-      txt += "🔑 *Código:* " + (d.codigoCabezal || '—') + "\n\n";
-      txt += "📄 *Ver Reporte Completo en PDF:* \n" + response.pdfUrl + "\n";
+      txt += `📅 *Fecha:* ${d.fecha}\n`;
+      txt += `🚘 *Placa:* ${d.placa}\n`;
+      txt += `👤 *Operador:* ${d.operador || '—'}\n`;
+      txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
+      txt += `📄 *Ver Reporte Completo en PDF:* \n${result.pdfUrl}\n`;
       txt += "━━━━━━━━━━━━━━━━━━━━";
 
-      var urlWa = "https://wa.me/?text=" + encodeURIComponent(txt);
+      const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
       window.open(urlWa, '_blank');
       showToast("✅ ¡Enviado con éxito!");
     } else {
-      showToast("❌ Error en formato de respuesta del servidor");
+      showToast("❌ Error al generar el enlace del PDF");
     }
-  })
-  .catch(function(err) {
+  } catch (err) {
     loading.style.display = 'none';
     showToast("❌ Hubo un problema al conectar con el servidor");
-  });
+    console.error(err);
+  }
 }
 
 function showToast(msg) {
-  var t = document.getElementById('toast'); t.textContent = msg; t.className = 'show';
-  setTimeout(function() { t.className = ''; }, 3500);
+  const t = document.getElementById('toast'); 
+  t.textContent = msg; 
+  t.className = 'show';
+  setTimeout(() => { t.className = ''; }, 3500);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   buildTables(); 
   initCanvas('firmaOperador'); 
   initCanvas('firmaAuditor');
