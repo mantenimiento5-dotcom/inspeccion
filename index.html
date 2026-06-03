@@ -186,8 +186,8 @@
 <div id="toast"></div>
 
 <script>
-// TU NUEVA URL CORRECTA
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxd0RsvyR4Znr_WmCVAOmMaEwjGfSEZLAFGzmb8g_zlMOTgSD6xVfyGVjEEs7DMTYhdWw/exec";
+// REEMPLAZA ESTA URL CON TU URL REAL DE GOOGLE SI NO COINCIDE EXACATAMENTE
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxA2N8mTstRl654EPBqSepTc3X6qRChC-YvA0z6FpP2b9WAtW2GgWvWzQ12Ico7v417/exec";
 
 const SECCIONES = {
   mecanica: ["Lubricación","Sist. De Enfriamiento","Sist. De Frenos","Sist. De Inyección","Sist. Dirección","Sist. Suspensión","Transmisión de potencia"],
@@ -291,25 +291,26 @@ function procesarYEnviarWhatsApp() {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: formData.toString()
   })
-  .then(res => res.json())
-  .then(result => {
+  .then(res => res.text()) // Leemos la respuesta directamente como texto limpio
+  .then(pdfUrl => {
     loading.style.display = 'none';
 
-    if (result.status === 'ok' && result.pdfUrl) {
+    if (pdfUrl && pdfUrl.startsWith("http")) {
       let txt = "🚛 *REPORTE DE INSPECCIÓN INICIAL*\n";
       txt += "━━━━━━━━━━━━━━━━━━━━\n";
       txt += `📅 *Fecha:* ${d.fecha}\n`;
       txt += `🚘 *Placa:* ${d.placa}\n`;
       txt += `👤 *Operador:* ${d.operador || '—'}\n`;
       txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n\n`;
-      txt += `📄 *Ver PDF Completo:* \n${result.pdfUrl}\n`;
+      txt += `📄 *Ver PDF Completo:* \n${pdfUrl}\n`;
       txt += "━━━━━━━━━━━━━━━━━━━━";
 
       const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
       window.open(urlWa, '_blank');
       showToast("✅ ¡Enviado con éxito!");
     } else {
-      showToast("❌ Error al procesar la respuesta del PDF");
+      showToast("❌ Error: El servidor no devolvió una URL válida");
+      console.log("Respuesta recibida:", pdfUrl);
     }
   })
   .catch(err => {
