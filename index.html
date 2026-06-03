@@ -176,7 +176,7 @@
   .ors-group input[type=radio][value="R"]:checked   + .ors-btn { background:#f9a825; border-color:#f9a825; color:#fff; }
   .ors-group input[type=radio][value="S"]:checked   + .ors-btn { background:#c62828; border-color:#c62828; color:#fff; }
 
-  /* legend */
+  /* Legend */
   .legend {
     display: flex; gap: 12px; flex-wrap: wrap;
     font-size: 12px; padding: 6px 16px 10px;
@@ -278,7 +278,7 @@
   .notice code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
 </style>
 
-<script src="https://rawcdn.githack.com/eKoopmans/html2pdf.js/81e05aa316aa47da0344b1c19b674844a49ed538/dist/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -423,7 +423,7 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <p>Guardando en Google Sheets…</p>
+  <p>Procesando información…</p>
 </div>
 
 <div id="toast"></div>
@@ -444,6 +444,7 @@ const CON_OBS = { mecanica: true, soldadura: false, electro: false, pintura: fal
 function buildTables() {
   Object.keys(SECCIONES).forEach(sec => {
     const tbody = document.getElementById(`tb-${sec}`);
+    if(!tbody) return;
     SECCIONES[sec].forEach(item => {
       const id = `${sec}_${item.replace(/[^a-zA-Z0-9]/g,'_')}`;
       let tr = `<tr>
@@ -469,8 +470,10 @@ function buildTables() {
 
 function initCanvas(id) {
   const canvas = document.getElementById(id);
+  if(!canvas) return;
   const ctx = canvas.getContext('2d');
   let drawing = false;
+  
   const ro = new ResizeObserver(() => {
     const img = canvas.toDataURL();
     canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -493,7 +496,7 @@ function initCanvas(id) {
 
 function clearCanvas(id) {
   const c = document.getElementById(id);
-  c.getContext('2d').clearRect(0,0,c.width,c.height);
+  if(c) c.getContext('2d').clearRect(0,0,c.width,c.height);
 }
 
 function getData() {
@@ -508,8 +511,8 @@ function getData() {
     obsMantenimiento: document.getElementById('obsMantenimiento').value,
     nombreOperador: document.getElementById('nombreOperador').value,
     nombreAuditor: document.getElementById('nombreAuditor').value,
-    firmaOperador: document.getElementById('firmaOperador').toDataURL(),
-    firmaAuditor: document.getElementById('firmaAuditor').toDataURL(),
+    firmaOperador: document.getElementById('firmaOperador') ? document.getElementById('firmaOperador').toDataURL() : '',
+    firmaAuditor: document.getElementById('firmaAuditor') ? document.getElementById('firmaAuditor').toDataURL() : '',
     items: {}
   };
   Object.keys(SECCIONES).forEach(sec => {
@@ -555,16 +558,17 @@ function compartirWhatsApp() {
     return;
   }
 
-  // Comprobar si la librería cargó correctamente en el ecosistema móvil
   if (typeof html2pdf === "undefined") {
-    showToast("❌ Error de seguridad móvil: Lee las instrucciones del chat", true);
+    showToast("❌ Error crítico: Librería PDF no disponible.", true);
     return;
   }
 
-  document.getElementById('loading').classList.add('show');
+  const loadingEl = document.getElementById('loading');
+  loadingEl.classList.add('show');
   const loadingText = document.querySelector('#loading p');
   if (loadingText) loadingText.textContent = "Generando PDF de Inspección...";
 
+  // Ocultar elementos innecesarios en la impresión
   const notice = document.getElementById('configNotice');
   const btnRow = document.querySelector('.btn-row');
   if (notice) notice.style.display = 'none';
@@ -572,34 +576,37 @@ function compartirWhatsApp() {
 
   const elementoAImprimir = document.querySelector('.wrapper');
   const opciones = {
-    margin: [10, 10, 10, 10],
-    filename: `Inspeccion_Cabezal_${d.placa || 'SinPlaca'}_${d.fecha}.pdf`,
+    margin: [12, 12, 12, 12],
+    filename: `Inspeccion_Cabezal_${d.placa.replace(/[^a-zA-Z0-9]/g,'')}_${d.fecha}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true, logging: false },
     jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
   };
 
   html2pdf().set(opciones).from(elementoAImprimir).save().then(() => {
+    if (notice) notice.style.display = 'block';
     if (btnRow) btnRow.style.display = 'flex';
-    document.getElementById('loading').classList.remove('show');
+    loadingEl.classList.remove('show');
 
+    // Construir texto descriptivo para el chat
     let txt = `🚛 *INSPECCIÓN INICIAL CABEZAL*\n`;
     txt += `━━━━━━━━━━━━━━━━━━━━\n`;
     txt += `📅 *Fecha:* ${d.fecha || '—'}\n`;
     txt += `🚘 *Placa:* ${d.placa || '—'}\n`;
     txt += `🔑 *Código:* ${d.codigoCabezal || '—'}\n`;
     txt += `👤 *Operador:* ${d.operador || '—'}\n\n`;
-    txt += `📎 _He generado el PDF de la inspección. Adjúntalo desde tus archivos descargados a este chat._`;
+    txt += `📎 _El documento PDF ha sido descargado en tu dispositivo. Adjúntalo a esta conversación de WhatsApp._`;
 
     const urlWa = `https://wa.me/?text=${encodeURIComponent(txt)}`;
     window.open(urlWa, '_blank');
     
-    showToast("✅ PDF Descargado. ¡Compártelo!");
+    showToast("✅ PDF Creado con éxito");
   }).catch(err => {
     console.error(err);
+    if (notice) notice.style.display = 'block';
     if (btnRow) btnRow.style.display = 'flex';
-    document.getElementById('loading').classList.remove('show');
-    showToast("❌ Error al generar el PDF", true);
+    loadingEl.classList.remove('show');
+    showToast("❌ Error al renderizar PDF", true);
   });
 }
 
